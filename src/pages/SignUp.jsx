@@ -1,11 +1,25 @@
 import { Box, Text, Input, Button, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { signup } from "../redux/actionFunc";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [username, setusername] = useState("");
   const [avatar, setAvatar] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const signupdone = useSelector((store) => {
+    return store.isAuth;
+  });
+  useEffect(() => {
+    if (signupdone) {
+      navigate("/");
+    }
+  }, [signupdone, navigate]);
+
   return (
     <>
       <Box w="100vw">
@@ -41,7 +55,13 @@ export const SignUp = () => {
               setPass(e.target.value);
             }}
           />
-          <Button>Sign Up</Button>
+          <Button
+            onClick={() =>
+              signup(dispatch, { username, email, password: pass, avatar })
+            }
+          >
+            Sign Up
+          </Button>
         </VStack>
       </Box>
     </>
